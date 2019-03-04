@@ -1,7 +1,9 @@
+
 service: sls-notes-backend
 
 plugins:
   - serverless-offline
+  - serverless-domain-manager
 
 custom:
   allowedHeaders:
@@ -15,6 +17,12 @@ custom:
     - X-Amz-User-Agent
     - app_user_id
     - app_user_name
+  customDomain:
+    domainName: api.programujzalexa.pl
+    basePath: 'v1'
+    stage: ${self:provider.stage}
+    certificateName: programujzalexa.pl
+    createRoute53Record: true
 
 provider:
   name: aws
@@ -26,6 +34,7 @@ provider:
   endpointType: regional
   environment:
     NOTES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    COGNITO_IDENTITY_POOL_ID: us-east-1:15c1a197-f55c-49f3-ae31-52f34234dd16
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -35,24 +44,37 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.NOTES_TABLE}"
 
 functions:
-  add-notes:
+  authenticate-google:
+    handler: api/authenticate-google.handler
+    description: Google IDP Authentication
+    events:
+      - http:
+          path: auth
+          method: get
+          cors:
+            origin: '*'
+            headers: ${self:custom.allowedHeaders}
+
+  add-note:
     handler: api/add-note.handler
     description: POST /note
     events:
       - http:
           path: note
           method: post
+          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
 
   update-note:
     handler: api/update-note.handler
-    description: POST /note
+    description: PATCH /note
     events:
       - http:
           path: note
           method: patch
+          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -64,6 +86,7 @@ functions:
       - http:
           path: notes
           method: get
+          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -75,17 +98,19 @@ functions:
       - http:
           path: note/n/{note_id}
           method: get
+          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
 
   delete-note:
     handler: api/delete-note.handler
-    description: DELETE /note/t/{timestamp}
+    description: DELETE /note
     events:
       - http:
           path: note/t/{timestamp}
           method: delete
+          authorizer: aws_iam
           cors:
             origin: '*'
             headers: ${self:custom.allowedHeaders}
@@ -122,3 +147,12 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+  GetawayResponseDefault4XX:
+    Type: AWS::ApiGateway::GatewayResponse
+    Properties:
+      ResponseParameters:
+        gatewayresponse.header.Access-Control-Allow-Origin: '*'
+        gatewayresponse.header.Access-Control-Allow-Headers: '*'
+      ResponseType: DEFAULT_4XX
+      RestApiId:
+        Ref: "ApiGatewayRestApi"
