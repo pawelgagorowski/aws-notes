@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.413.0",
+    "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "serverless-offline": "^4.7.1",
     "underscore": "^1.9.1",
