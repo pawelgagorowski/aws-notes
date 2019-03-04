@@ -16,12 +16,6 @@ custom:
     - X-Amz-User-Agent
     - app_user_id
     - app_user_name
-  customDomain:
-    domainName: api.programujzalexa.pl
-    basePath: 'v1'
-    stage: ${self:provider.stage}
-    certificateName: programujzalexa.pl
-    createRoute53Record: true
 
 provider:
   name: aws
@@ -146,7 +140,7 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-              
+
     GatewayResponseDefault4XX: ## YOU CAN ADD SIMILAR SECTION FOR 5XX ERRORS IF DESIRED
       Type: AWS::ApiGateway::GatewayResponse
       Properties:
