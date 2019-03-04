@@ -146,7 +146,7 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
-  GetawayResponseDefault4XX:
+  GatewayResponseDefault4XX:
     Type: AWS::ApiGateway::GatewayResponse
     Properties:
       ResponseParameters:
