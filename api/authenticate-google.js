@@ -3,11 +3,13 @@
  */
 
 const AWS = require('aws-sdk');
+//change region for yours!
 AWS.config.update({ region: 'us-east-1' });
 
 const jwtDecode = require('jwt-decode');
 const util = require('./util.js');
 
+//Add COGNITO_IDENTITY_POOL_ID to your serverless.yml file as a environment variable
 const cognitoidentity = new AWS.CognitoIdentity();
 const identityPoolId = process.env.COGNITO_IDENTITY_POOL_ID;
 

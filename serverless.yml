@@ -27,7 +27,8 @@ provider:
   endpointType: regional
   environment:
     NOTES_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    COGNITO_IDENTITY_POOL_ID: us-east-1:15c1a197-f55c-49f3-ae31-52f34234dd16
+    # add yours COGNITO_IDENTITY_POOL_ID as an environment variable 
+    COGNITO_IDENTITY_POOL_ID: add yours environment variable
   iamRoleStatements:
     - Effect: Allow
       Action:
