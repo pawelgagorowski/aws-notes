@@ -10,10 +10,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 This project assumes the aws account, nodejs and the serverless framework knowledge
 
-```
+
 This will not be the subject of this intruction but you can also build your project through buildspec.yml file located in the root folder. You will use then CodeBild, CodeCommit and CodePipeline. What is the advantage over serverless? Like in ever commit you only update your project, not build it from the scratch like in serverless option. It is faster!
 
-```
+
 You need to have aws admin privileges client on your local machine
 
 entered your name for environment variables in the serverless.yml file
